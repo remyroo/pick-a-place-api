@@ -1,0 +1,72 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2
+jobs:
+  build:
+    working_directory: ~/pick-a-place-api
+    docker:
+      # specify the version you desire here
+      - image: circleci/ruby:2.5.1-node-browsers
+        environment:
+          RAILS_ENV: test
+          PG_HOST: localhost
+          PG_USER: circleci
+      - image: circleci/postgres:9.6
+        environment:
+          POSTGRES_USER: circleci
+          POSTGRES_DB: pick-a-place-api_test
+          POSTGRES_PASSWORD: ''
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - pap-api-dependencies-{{ checksum "Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - pap-api-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: pap-api-dependencies-{{ checksum "Gemfile.lock" }}
+        
+       # Wait for DB
+      - run:
+          name: Wait for DB to be ready
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      # Database setup
+      - run:
+          name: Set up DB
+          command: bundle exec rake db:setup --trace
+          environment:
+              DATABASE_URL: "postgres://circleci@localhost:5432/pick-a-place-api_test"
+
+      # run tests!
+      - run:
+          name: run tests
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+            
+            bundle exec rspec --profile 10 \
+                            --format RspecJunitFormatter \
+                            --out /tmp/test-results/rspec.xml \
+                            --format progress \
+                            $TEST_FILES
+
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
