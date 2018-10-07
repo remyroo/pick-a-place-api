@@ -12,7 +12,7 @@ default: &default
 
 development: &development
   <<: *default
-  database: <%= "#{ENV["DB_DBNAME"]}_dev" %>
+  database: <%= ENV["DB_DBNAME"] %>
   username: <%= ENV["DB_USERNAME"] %>
   password: <%= ENV["DB_PASSWORD"] %>
   host: localhost
@@ -20,7 +20,7 @@ development: &development
 
 test:
   <<: [*default, *development]
-  database: <%= "#{ENV["DB_DBNAME"]}_test" %>
+  database: <%= ENV["DB_TEST_DB_NAME"] %>
 
 production:
   <<: *default

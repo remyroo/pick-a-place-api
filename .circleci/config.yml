@@ -13,10 +13,11 @@ jobs:
           RAILS_ENV: test
           PG_HOST: localhost
           PG_USER: circleci
+          DATABASE_URL: postgresql://circleci@localhost/circlecidb
       - image: circleci/postgres:9.6
         environment:
           POSTGRES_USER: circleci
-          POSTGRES_DB: pick-a-place-api_test
+          POSTGRES_DB: circlecidb
           POSTGRES_PASSWORD: ''
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -52,7 +53,7 @@ jobs:
           name: Set up DB
           command: bundle exec rake db:setup --trace
           environment:
-              DATABASE_URL: "postgres://circleci@localhost:5432/pick-a-place-api_test"
+              DATABASE_URL: "postgres://circleci@localhost:5432/circlecidb"
 
       # run tests!
       - run:

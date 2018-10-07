@@ -33,7 +33,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'factory_bot_rails'
-  gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
+  gem 'faker', git: 'https://github.com/stympy/faker.git', branch: 'master'
   gem 'pry-rails'
   gem 'rspec-rails', '~> 3.8'
   gem 'rubocop', '~> 0.59.2', require: false
