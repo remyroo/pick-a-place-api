@@ -2,6 +2,7 @@
 
 FactoryBot.define do
   factory :venue do
+    neighbourhood
     name { Faker::Restaurant.name }
     address { Faker::Address.full_address }
     opening_hours { "Mon-Sun: 7.30am - 8.pm" }
