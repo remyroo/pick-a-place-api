@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      post 'user_token' => 'user_token#create'
+      post 'signup', to: 'users#create'
+      post 'login', to: 'user_token#create'
+
+      resources :users, only: [:index, :update, :destroy]
     end
   end
 end
