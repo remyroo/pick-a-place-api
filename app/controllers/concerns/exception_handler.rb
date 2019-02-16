@@ -10,7 +10,7 @@ module ExceptionHandler
     rescue_from ActiveRecord::RecordInvalid do |e|
       json_response({ message: e.message }, :unprocessable_entity)
     end
-    rescue_from ExceptionHandler::AuthorizationError do |e|
+    rescue_from ExceptionHandler::AuthorizationError do
       json_response({ message: "Unauthorized Request" }, :unauthorized)
     end
   end
