@@ -24,7 +24,7 @@ RSpec.describe 'Users API', type: :request do
 
   describe 'POST #create' do
     context 'on success' do
-      before { post api_v1_signup_path, params: valid_params, headers: {} }
+      before { post api_signup_path, params: valid_params, headers: {} }
 
       it 'creates a new user' do
         expect(response).to have_http_status(:created)
@@ -37,7 +37,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'on failure' do
-      before { post api_v1_signup_path, params: invalid_params, headers: {} }
+      before { post api_signup_path, params: invalid_params, headers: {} }
 
       it 'does not create a user' do
         expect(response).to have_http_status(:unprocessable_entity)
@@ -55,7 +55,7 @@ RSpec.describe 'Users API', type: :request do
   describe 'GET #index' do
     context 'on success' do
       it 'returns all users for admin user' do
-        get api_v1_users_path, headers: authenticated_header(admin)
+        get api_users_path, headers: authenticated_header(admin)
         expect(json.count).to eq(2)
         expect(response).to have_http_status(:ok)
       end
@@ -63,7 +63,7 @@ RSpec.describe 'Users API', type: :request do
 
     context 'on failure' do
       before do
-        get api_v1_users_path, headers: authenticated_header(user)
+        get api_users_path, headers: authenticated_header(user)
       end
 
       it 'raises unauthorized error for non-admin user' do
@@ -82,7 +82,7 @@ RSpec.describe 'Users API', type: :request do
   describe 'PUT #update' do
     context 'on success' do
       it 'allows user to update their own data' do
-        put api_v1_user_path(user.id),
+        put api_user_path(user.id),
             params: { user: {username: 'new_username'} },
             headers: authenticated_header(user)
 
@@ -91,7 +91,7 @@ RSpec.describe 'Users API', type: :request do
       end
 
       it 'allows admin to update any user data' do
-        put api_v1_user_path(user.id),
+        put api_user_path(user.id),
             params: { user: {email: 'new_email@me.com'} },
             headers: authenticated_header(admin)
 
@@ -102,7 +102,7 @@ RSpec.describe 'Users API', type: :request do
 
     context 'on failure' do
       before do
-        put api_v1_user_path(admin.id),
+        put api_user_path(admin.id),
             params: { user: {username: 'new_username'} },
             headers: authenticated_header(user)
       end
@@ -125,13 +125,13 @@ RSpec.describe 'Users API', type: :request do
 
     context 'on success' do
       it 'allows user to delete their own data' do
-        delete api_v1_user_path(users.first.id),
+        delete api_user_path(users.first.id),
                headers: authenticated_header(users.first)
         expect(response).to have_http_status(:no_content)
       end
 
       it 'allows admin to delete users data' do
-        delete api_v1_user_path(users.second.id),
+        delete api_user_path(users.second.id),
                headers: authenticated_header(admin)
         expect(response).to have_http_status(:no_content)
       end
@@ -139,7 +139,7 @@ RSpec.describe 'Users API', type: :request do
 
     context 'on failure' do
       before do
-        delete api_v1_user_path(admin.id),
+        delete api_user_path(admin.id),
                headers: authenticated_header(user)
       end
 
