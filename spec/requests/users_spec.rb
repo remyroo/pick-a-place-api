@@ -10,7 +10,7 @@ RSpec.describe 'Users API', type: :request do
         username: Faker::Internet.username(3..15),
         password: 'password',
         password_confirmation: 'password'
-      },
+      }
   } end
   let!(:invalid_params) do {
     user:
@@ -19,7 +19,7 @@ RSpec.describe 'Users API', type: :request do
         username: user.username,
         password: 'password',
         password_confirmation: 'password'
-      },
+      }
   } end
 
   describe 'POST #create' do
@@ -28,11 +28,11 @@ RSpec.describe 'Users API', type: :request do
 
       it 'creates a new user' do
         expect(response).to have_http_status(:created)
-        expect(json["user"]["email"]).to eq(valid_params[:user][:email])
+        expect(json['user']['email']).to eq(valid_params[:user][:email])
       end
 
       it 'returns an authentication token' do
-        expect(json["auth_token"]).not_to be_nil
+        expect(json['auth_token']).not_to be_nil
       end
     end
 
@@ -83,19 +83,19 @@ RSpec.describe 'Users API', type: :request do
     context 'on success' do
       it 'allows user to update their own data' do
         put api_v1_user_path(user.id),
-            params: { user: {username: "new_username"} },
+            params: { user: {username: 'new_username'} },
             headers: authenticated_header(user)
 
-        expect(json["username"]).to eq("new_username")
+        expect(json['username']).to eq('new_username')
         expect(response).to have_http_status(:ok)
       end
 
       it 'allows admin to update any user data' do
         put api_v1_user_path(user.id),
-            params: { user: {email: "new_email@me.com"} },
+            params: { user: {email: 'new_email@me.com'} },
             headers: authenticated_header(admin)
 
-        expect(json["email"]).to eq("new_email@me.com")
+        expect(json['email']).to eq('new_email@me.com')
         expect(response).to have_http_status(:ok)
       end
     end
@@ -103,7 +103,7 @@ RSpec.describe 'Users API', type: :request do
     context 'on failure' do
       before do
         put api_v1_user_path(admin.id),
-            params: { user: {username: "new_username"} },
+            params: { user: {username: 'new_username'} },
             headers: authenticated_header(user)
       end
 
@@ -125,19 +125,22 @@ RSpec.describe 'Users API', type: :request do
 
     context 'on success' do
       it 'allows user to delete their own data' do
-        delete api_v1_user_path(users.first.id), headers: authenticated_header(users.first)
+        delete api_v1_user_path(users.first.id),
+               headers: authenticated_header(users.first)
         expect(response).to have_http_status(:no_content)
       end
 
       it 'allows admin to delete users data' do
-        delete api_v1_user_path(users.second.id), headers: authenticated_header(admin)
+        delete api_v1_user_path(users.second.id),
+               headers: authenticated_header(admin)
         expect(response).to have_http_status(:no_content)
       end
     end
 
     context 'on failure' do
       before do
-        delete api_v1_user_path(admin.id), headers: authenticated_header(user)
+        delete api_v1_user_path(admin.id),
+               headers: authenticated_header(user)
       end
 
       it 'raises error for unauthorized deletes' do
