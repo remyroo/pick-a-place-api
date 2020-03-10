@@ -1,5 +1,6 @@
 User.first_or_create!(
-  email: Faker::Internet.email,
-  username: Faker::Internet.username(3..15),
-  password: 'password'
+  email: 'admin@example.com',
+  username: 'admin',
+  password: 'password',
+  role: 'admin'
 )
