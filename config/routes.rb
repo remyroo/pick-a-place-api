@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       post 'login', to: 'user_token#create'
 
       resources :users, only: [:index, :update, :destroy]
+      get 'search', to: 'venues#search'
     end
   end
 end
