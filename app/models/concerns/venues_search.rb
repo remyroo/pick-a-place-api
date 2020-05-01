@@ -65,6 +65,7 @@ class VenuesSearch
   end
 
   def place_details_params
+    # Single responspiibility, this should probably move.
   end
 
   def get_nearby_venues
